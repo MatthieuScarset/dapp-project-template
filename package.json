@@ -32,6 +32,8 @@
   "scripts": {
     "start": "npx hardhat compile",
     "test": "npx hardhat test tests/Contract.js",
+    "deploy": "npx hardhat contract:deploy",
+    "verify": "npx hardhat contract:verify",
     "front": "cd front/ && npm run start"
   }
 }

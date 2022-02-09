@@ -7,12 +7,13 @@ class Messenger {
     window.addEventListener("newMessage", this.onNew, true);
   };
 
-  new = (content, _type = 1) => {
+  new = (content, type = 1, remove = true) => {
     window.dispatchEvent(
       new CustomEvent("newMessage", {
         detail: {
-          type: _type,
+          type: type,
           message: content,
+          autoRemove: remove,
         },
       })
     );
@@ -69,7 +70,7 @@ class Messenger {
       "relative",
       "mt-3",
       "p-3",
-      !Boolean(event.detail.type) ? "bg-red" : "bg-white",
+      !Boolean(event.detail.type) ? "bg-red-500" : "bg-white",
       !Boolean(event.detail.type) ? "text-white" : "text-black",
       "rounded",
       "shadow",
@@ -84,9 +85,11 @@ class Messenger {
     this.element.append(item);
 
     // Remove after 3s.
-    setTimeout(() => {
-      item.remove();
-    }, 3000);
+    if (event.detail.autoRemove) {
+      setTimeout(() => {
+        item.remove();
+      }, 3000);
+    }
   };
 
   onClickClose = (event) => {

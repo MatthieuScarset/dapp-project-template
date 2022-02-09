@@ -6,20 +6,29 @@ require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
 require("@nomiclabs/hardhat-waffle");
 
-const { API_URL, PRIVATE_KEY, ETHERSCAN_API_KEY, NETWORK } = process.env;
+const {
+  NETWORK_CHAIN,
+  NETWORK_API_URL,
+  NETWORK_PRIVATE_KEY,
+  ETHERSCAN_API_KEY,
+  CONTRACT_ADDRESS,
+} = process.env;
 
 module.exports = {
   solidity: "0.8.9",
-  defaultNetwork: `${NETWORK}`,
+  defaultNetwork: NETWORK_CHAIN,
   networks: {
     hardhat: {},
-    [`${NETWORK}`]: {
-      url: API_URL,
-      accounts: [`0x${PRIVATE_KEY}`],
+    [NETWORK_CHAIN]: {
+      url: NETWORK_API_URL,
+      accounts: [`0x${NETWORK_PRIVATE_KEY}`],
     },
   },
   etherscan: {
-    apiKey: `${ETHERSCAN_API_KEY}`,
+    apiKey: ETHERSCAN_API_KEY,
+  },
+  contract: {
+    address: CONTRACT_ADDRESS,
   },
 };
 
@@ -37,4 +46,26 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   for (const account of accounts) {
     console.log(account.address);
   }
+});
+
+/**
+ * Deploy the contract.
+ */
+task("contract:deploy", "Deploying contract", async (taskArgs, hre) => {
+  const Contract = await ethers.getContractFactory("Contract");
+  const _contract = await Contract.deploy();
+  console.log("Contract deployed to address:", _contract.address);
+  console.log("Copy/paste this address into .env file.");
+  console.log("Then, run `yarn run verify` to verify the contract.");
+});
+
+/**
+ * Verify the contract.
+ */
+task("contract:verify", "Verifying contract", async (taskArgs, hre) => {
+  const result = await hre.run("verify:verify", {
+    address: `${CONTRACT_ADDRESS}`,
+    constructorArguments: [],
+  });
+  console.log("Contract verification:", result);
 });

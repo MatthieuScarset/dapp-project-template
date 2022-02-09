@@ -12,21 +12,6 @@ class Wallet {
   initialize = () => {
     const { ethereum } = window;
 
-    if (!Boolean(ethereum)) {
-      // Install wallet suggestion.
-      let message = "";
-      message += "<b>Missing Ethereum provider.</b>";
-      message += "<br>";
-      message += "Please install one provider such as ";
-      message += '<a target="_blank" href="https://frame.sh/">Frame.sh</a>';
-      message += " or ";
-      message +=
-        '<a target="_blank" href="https://metamask.io/">Metamask.io</a>';
-
-      this.messenger.new(message);
-      return FALSE;
-    }
-
     // Attach click event.
     this.element.addEventListener("click", this.onClick, true);
 
@@ -41,7 +26,7 @@ class Wallet {
     message += this.status == -1 ? "Disconnected." : "";
     message +=
       this.status == 1
-        ? "Connected: " +
+        ? "Connected wallet: " +
           "<br>" +
           '<code class="block p-2 bg-slate-800 text-white">' +
           this.getAccount() +

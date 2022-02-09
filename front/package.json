@@ -17,10 +17,11 @@
     "url": "https://github.com/MatthieuScarset/dapp-project-template/issues"
   },
   "homepage": "https://github.com/MatthieuScarset/dapp-project-template#readme",
-  "devDependencies": {},
-  "dependencies": {},
+  "dependencies": {
+    "ethers": "^5.5.4"
+  },
   "scripts": {
-    "data": "cp -R ../artifacts/contracts front/",
+    "data": "cp -R ../artifacts/contracts ./",
     "server": "php -S localhost:8080 -t ./",
     "start": "npm run data && npm run server"
   }
