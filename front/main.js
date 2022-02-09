@@ -6,6 +6,7 @@ import { Wallet } from "./modules/wallet.js";
 const { ethereum, localStorage } = window;
 const env = settings.local ?? {};
 
+// Global setup.
 const initialize = async () => {
   // Messages.
   const messageBoxes = document.getElementById("messages");
@@ -53,8 +54,15 @@ const initialize = async () => {
   const contract = new Contract(contractDefinition);
   contract.initialize();
 
-  // Update frontend.
-  let contractName = contract.getName();
+  // Run custom application now.
+  await main(messenger, wallet, contract).then(() =>
+    messenger.new("Application is ready, enjoy!")
+  );
+};
+
+// Custom things go here.
+const main = async (messenger, wallet, contract) => {
+  let contractName = contract.get("contractName");
   document.title = contractName;
   document.querySelectorAll(".contract-name").forEach((el) => {
     el.innerHTML = contractName;

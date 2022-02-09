@@ -33,8 +33,8 @@ class Contract {
       .catch((error) => messenger.new(error, 0, false));
   };
 
-  getName = () => {
-    return this.name;
+  get = (key) => {
+    return this.definition[key] || null;
   };
 }
 
