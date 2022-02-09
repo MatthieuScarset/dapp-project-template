@@ -1,0 +1,37 @@
+{
+  "name": "dapp",
+  "version": "1.0.0",
+  "description": "A project template for your web3 application.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatthieuScarset/dapp-project-template.git"
+  },
+  "author": {
+    "name": "Matthieu SCARSET",
+    "email": "m@matthieuscarset.com",
+    "url": "https://matthieuscarset.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatthieuScarset/dapp-project-template/issues"
+  },
+  "homepage": "https://github.com/MatthieuScarset/dapp-project-template#readme",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.4",
+    "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.2",
+    "chai": "^4.3.6",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.4",
+    "hardhat": "^2.8.3",
+    "@openzeppelin/contracts": "^4.4.2",
+    "dotenv": "^16.0.0"
+  },
+  "dependencies": {},
+  "scripts": {
+    "start": "npx hardhat compile",
+    "test": "npx hardhat test tests/Contract.js",
+    "front": "cd front/ && npm run start"
+  }
+}

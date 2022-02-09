@@ -1,0 +1,27 @@
+{
+  "name": "dapp-front",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatthieuScarset/dapp-project-template.git"
+  },
+  "author": {
+    "name": "Matthieu SCARSET",
+    "email": "m@matthieuscarset.com",
+    "url": "https://matthieuscarset.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatthieuScarset/dapp-project-template/issues"
+  },
+  "homepage": "https://github.com/MatthieuScarset/dapp-project-template#readme",
+  "devDependencies": {},
+  "dependencies": {},
+  "scripts": {
+    "data": "cp -R ../artifacts/contracts front/",
+    "server": "php -S localhost:8080 -t ./",
+    "start": "npm run data && npm run server"
+  }
+}
