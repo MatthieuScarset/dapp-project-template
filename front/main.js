@@ -6,11 +6,13 @@ import { Wallet } from "./modules/wallet.js";
 const { ethereum, localStorage } = window;
 const env = settings.local ?? {};
 
+let wallet, messenger, contract;
+
 // Global setup.
 const initialize = async () => {
   // Messages.
   const messageBoxes = document.getElementById("messages");
-  const messenger = new Messenger(messageBoxes);
+  messenger = new Messenger(messageBoxes);
   messenger.initialize();
 
   if (!Boolean(ethereum)) {
@@ -31,7 +33,7 @@ const initialize = async () => {
 
   // Wallet.
   const walletButton = document.getElementById("walletButton");
-  const wallet = new Wallet(walletButton, localStorage);
+  wallet = new Wallet(walletButton, localStorage);
   wallet.initialize();
 
   // Smart Contract.
@@ -51,22 +53,22 @@ const initialize = async () => {
     ...contractParams,
   });
 
-  const contract = new Contract(contractDefinition);
+  contract = new Contract(contractDefinition);
   contract.initialize();
 
   // Run custom application now.
-  await main(messenger, wallet, contract).then(() =>
-    messenger.new("Application is ready, enjoy!")
-  );
+  await main().then(() => {
+    if (!localStorage.getItem("ready"))
+      messenger.new("Application is ready, enjoy!");
+  });
 };
 
-// Custom things go here.
-const main = async (messenger, wallet, contract) => {
-  let contractName = contract.get("contractName");
-  document.title = contractName;
-  document.querySelectorAll(".contract-name").forEach((el) => {
-    el.innerHTML = contractName;
-  });
+// Run the app.
+const main = async () => {
+  localStorage.setItem("ready", true);
+
+  // Custom things go here.
+  // ...
 };
 
 window.addEventListener("DOMContentLoaded", initialize);

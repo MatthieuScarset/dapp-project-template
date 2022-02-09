@@ -1,7 +1,7 @@
 {
-  "name": "dapp",
+  "name": "dapp-project-template",
   "version": "1.0.0",
-  "description": "A project template for your web3 application.",
+  "description": "A project template for your smart contract.",
   "private": true,
   "repository": {
     "type": "git",

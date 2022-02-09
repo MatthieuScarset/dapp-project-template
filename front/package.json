@@ -1,22 +1,14 @@
 {
-  "name": "dapp-front",
+  "name": "dapp-project-template-front",
   "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MatthieuScarset/dapp-project-template.git"
-  },
+  "description": "A simple UX for your smart contracts.",
+  "main": "main.js",
   "author": {
     "name": "Matthieu SCARSET",
     "email": "m@matthieuscarset.com",
     "url": "https://matthieuscarset.com"
   },
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MatthieuScarset/dapp-project-template/issues"
-  },
-  "homepage": "https://github.com/MatthieuScarset/dapp-project-template#readme",
   "dependencies": {
     "ethers": "^5.5.4"
   },
