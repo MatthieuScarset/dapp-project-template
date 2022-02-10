@@ -20,3 +20,7 @@ yarn start
 Open your [localhost](http://localhost:8000/) and you're good to go.
 
 Enjoy!
+
+## Credits
+
+- <a href="https://www.flaticon.com/free-icons/ethereum" title="ethereum icons">Ethereum icons created by Freepik - Flaticon</a>
