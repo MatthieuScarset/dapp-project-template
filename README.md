@@ -1,5 +1,7 @@
 # Dapp project template
 
+![Frontend screenshot](/front/assets/screenshot.png)
+
 This is a default template to kickstart your dapp development.
 
 Built with [Hardhat](https://hardhat.org/). 
