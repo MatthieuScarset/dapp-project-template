@@ -10,10 +10,7 @@
   },
   "license": "ISC",
   "dependencies": {},
-  "devDependencies": {
-    "ethers": "^5.5.4",
-    "tailwindcss": "^3.0.19"
-  },
+  "devDependencies": {},
   "scripts": {
     "data": "cp -R ../artifacts/contracts ./ && rm contracts/*/*.dbg.json",
     "server": "php -S localhost:8080 -t ./",

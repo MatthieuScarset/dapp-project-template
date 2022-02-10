@@ -7,11 +7,7 @@ class App {
   }
 
   run = async () => {
-    console.log("hello");
-    if (!this.storage.getItem("ready")) {
-      this.messenger.new("Application is ready, enjoy!");
-      this.storage.setItem("ready", true);
-    }
+    this.messenger.new("Application is ready, enjoy!");
   };
 }
 
