@@ -12,8 +12,9 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
-    "data": "cp -R ../artifacts/contracts ./ && rm contracts/*/*.dbg.json",
-    "server": "php -S localhost:8080 -t ./",
-    "start": "npm run data & npm run server"
+    "serve": "node lib/server.js",
+    "init": "yarn run clone:config && yarn run clone:contract",
+    "clone:config": "cp -v -u -p src/modules/config.example.js src/modules/config.js",
+    "clone:contract": "cp -R ../artifacts/contracts ./ && rm contracts/*/*.dbg.json"
   }
 }
