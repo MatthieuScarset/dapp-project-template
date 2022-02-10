@@ -1,10 +1,14 @@
-# Dapp project template frontend
+# Dapp project template
 
-This is a default template to serve a simple UX for your dapp.
+This is a default template to kickstart your dapp development.
 
-Only requirement is to have `node` and `yarn` or `npm` installed.
+Built with [Hardhat](https://hardhat.org/). 
 
-Zero dependencies.
+Only requires [node](https://nodejs.org/en/download/) and few dependencies:
+
+- `yarn` for package management (recommended over `npm`)
+- `hardhat`, `ethers`, `chai`, `ethereum-waffle` and `dotenv` for testing 
+- `@openzeppelin/contracts` for *quick* and *secure* smart contract development
 
 ## Getting started
 

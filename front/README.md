@@ -17,6 +17,6 @@ yarn init
 yarn start
 ```
 
-Open [localhost:8080](http://localhost:8080) and you're good to go.
+Open your [localhost](http://localhost:8000/) and you're good to go.
 
 Enjoy!
