@@ -1,12 +1,14 @@
+import { App } from "./modules/app.js";
+import config from "./modules/config.js";
 import { Contract } from "./modules/contract.js";
 import { Messenger } from "./modules/messenger.js";
-import settings from "./modules/settings.js";
 import { Wallet } from "./modules/wallet.js";
 
-const { ethereum, localStorage } = window;
-const env = settings.local ?? {};
+let wallet = null;
+let messenger = null;
+let contracts = [];
 
-let wallet, messenger, contract;
+const { ethereum, localStorage } = window;
 
 // Global setup.
 const initialize = async () => {
@@ -36,39 +38,31 @@ const initialize = async () => {
   wallet = new Wallet(walletButton, localStorage);
   wallet.initialize();
 
-  // Smart Contract.
-  const contractArtifactPath = "./contracts/Contract.sol/Contract.json";
-  const contractData = await fetch(contractArtifactPath)
-    .then((response) => response.json())
-    .then((contractData) => contractData);
+  // Contracts.
+  config.contracts.forEach(async (data) => {
+    await fetch(data.path)
+      .then((response) => response.json())
+      .then((contractData) => {
+        const contractParams = {
+          chainId: config.network.id ?? 1,
+          address: data.address ?? "0x0",
+          abi: contractData.abi ?? [],
+        };
 
-  const contractParams = {
-    chainId: env.network.id ?? 1,
-    address: env.contract.address ?? "0x0",
-    abi: contractData.abi ?? [],
-  };
+        const contractDefinition = Object.freeze({
+          ...contractData,
+          ...contractParams,
+        });
 
-  const contractDefinition = Object.freeze({
-    ...contractData,
-    ...contractParams,
+        let contract = new Contract(contractDefinition);
+        contract.initialize();
+        contracts.push(contract);
+      });
   });
-
-  contract = new Contract(contractDefinition);
-  contract.initialize();
 
   // Run custom application now.
-  await main().then(() => {
-    if (!localStorage.getItem("ready"))
-      messenger.new("Application is ready, enjoy!");
-  });
-};
-
-// Run the app.
-const main = async () => {
-  localStorage.setItem("ready", true);
-
-  // Custom things go here.
-  // ...
+  const app = new App(messenger, wallet, contracts, localStorage);
+  app.run();
 };
 
 window.addEventListener("DOMContentLoaded", initialize);

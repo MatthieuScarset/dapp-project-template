@@ -15,7 +15,7 @@
     />
     <meta name="author" content="Matthieu SCARSET" />
     <link rel="icon" type="image/png" href="icon.svg" />
-    <link rel="stylesheet" href="styles.css" type="text/css" />
+    <link rel="stylesheet" href="/src/main.css" type="text/css" />
   </head>
 
   <body class="relative h-screen break-word">
@@ -70,15 +70,18 @@
       <p class="ml-3 border-l border-gray-200 pl-3">
         <a
           target="_blank"
-          title="View author's website in a new tab"
+          title="I am human"
           class="hover:text-teal-600"
-          href="https://matthieuscarset.com"
-          >Contact</a
+          href="./humans.txt"
+          >whoami</a
         >
       </p>
     </footer>
 
-    <script type="module" src="main.js" defer></script>
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <!-- Vanilla JS -->
+    <script type="module" src="/src/main.js" defer></script>
+
+    <!-- Do not use in production! -->
+    <script type="module" src="/lib/tailwindcss.js" defer></script>
   </body>
 </html>

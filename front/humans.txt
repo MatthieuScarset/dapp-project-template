@@ -1,0 +1,13 @@
+/* TEAM */
+Author: Matthieu
+Site: poulet.eth
+Twitter: @MatthieuScarset
+
+/* THANKS */
+ETHGlobal: https://ethglobal.com/
+
+/* SITE */
+Last update: 2022/02/12
+Standards: Web3, HTML5, CSS3, JavaScript modules.
+Components: Hardhat, Yarn, TailwindCSS
+Software: Solidity, JavaScript,

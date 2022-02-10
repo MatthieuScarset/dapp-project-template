@@ -9,12 +9,14 @@
     "url": "https://matthieuscarset.com"
   },
   "license": "ISC",
-  "dependencies": {
-    "ethers": "^5.5.4"
+  "dependencies": {},
+  "devDependencies": {
+    "ethers": "^5.5.4",
+    "tailwindcss": "^3.0.19"
   },
   "scripts": {
-    "data": "cp -R ../artifacts/contracts ./",
+    "data": "cp -R ../artifacts/contracts ./ && rm contracts/*/*.dbg.json",
     "server": "php -S localhost:8080 -t ./",
-    "start": "npm run data && npm run server"
+    "start": "npm run data & npm run server"
   }
 }

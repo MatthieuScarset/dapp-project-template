@@ -1,4 +1,4 @@
-import { ethers } from "../node_modules/ethers/dist/ethers.esm.min.js";
+import { ethers } from "../../node_modules/ethers/dist/ethers.esm.min.js";
 import { Messenger } from "./messenger.js";
 
 class Contract {

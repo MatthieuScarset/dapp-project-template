@@ -1,3 +1,5 @@
 node_modules
 contracts
-env.json
+dist
+config.js
+*.log
