@@ -39,7 +39,7 @@ A simple frontend application is included in the `front/` folder.
 ```bash
 cd front/
 yarn install
-yarn init 
+yarn firsttime
 yarn serve
 ```
 

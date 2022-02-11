@@ -13,7 +13,7 @@ git clone https://github.com/MatthieuScarset/dapp-project-template.git my-dapp
 cd my-dapp/
 cd front/
 yarn install
-yarn init
+yarn firsttime
 yarn start
 ```
 
