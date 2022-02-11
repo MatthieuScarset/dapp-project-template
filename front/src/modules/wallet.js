@@ -3,102 +3,54 @@ import { Messenger } from "./messenger.js";
 class Wallet {
   constructor(domElement, localStorage = null) {
     this.element = domElement;
-    this.stateKey = "wallet";
-    this.storage = localStorage || window.localStorage;
-    this.status = Boolean(this.getAccount()) ? 1 : 0;
     this.messenger = new Messenger("#messages");
+    this.address = undefined;
   }
 
-  initialize = () => {
+  initialize = async () => {
     const { ethereum } = window;
 
+    // Hide button.
+    if (!Boolean(ethereum)) {
+      this.element.disabled = true;
+      this.element.classList.add('hidden');
+      return;
+    }
+
     // Attach click event.
-    this.element.addEventListener("click", this.onClick, true);
+    this.element.addEventListener("click", this.connect, true);
 
-    // Refresh button.
-    this.element.disabled = !Boolean(ethereum);
-    this.label();
-
-    // Display message.
-    let message = "";
-    message += !Boolean(ethereum) ? "No wallet detected." : "";
-    message += this.status == 0 ? "Not connected." : "";
-    message += this.status == -1 ? "Disconnected." : "";
-    message +=
-      this.status == 1
-        ? "Connected wallet: " +
-        "<br>" +
-        '<code class="block p-2 bg-slate-800 text-white">' +
-        this.getAccount() +
-        "</code>"
-        : "";
-
-    this.messenger.new(message, true);
-  };
-
-  // Element.
-  label = () => {
-    this.element.innerHTML =
-      this.status == -1
-        ? "Reconnect"
-        : this.status == 1
-          ? "Disconnect"
-          : "Connect";
+    await this.connect();
   };
 
   // Utility.
   connect = async () => {
+    this.element.disabled = true;
+
     await window.ethereum
       .request({ method: "eth_requestAccounts" })
       .then((accounts) => {
-        this.messenger.new("Wallet connected successfully", true);
-        this.setAccount(accounts[0]);
-        this.status = 1;
-        this.label();
+        this.address = accounts[0];
+        this.element.innerHTML = this.address;
+        this.element.classList.add('tooltip');
+        this.element.classList.remove('cursor-pointer');
+        this.element.removeEventListener("click", this.connect);
+        this.element.addEventListener("click", this.copy, true);
+        this.messenger.new('To sign out from this dapp, open your wallet application and remove this page from your permissions', 1);
       })
       .catch((error) => {
         this.messenger.error(error.code + " " + error.message, true);
-        this.disconnect();
-        this.label();
+        this.address = null;
+      })
+      .finally(() => {
+        this.element.disabled = false;
       });
   };
 
-  disconnect = () => {
-    this.messenger.new("Wallet disconnected", true);
-    this.removeAccount();
-    this.status = -1;
-    this.label();
-  };
-
-  // State.
-  getAccount = () => {
-    return this.storage.getItem(this.stateKey);
-  };
-
-  setAccount = (value) => {
-    this.storage.setItem(this.stateKey, value);
-  };
-
-  removeAccount = () => {
-    this.storage.removeItem(this.stateKey);
-  };
-
-  // Events.
-  onClick = () => {
-    this.element.disabled = true;
-
-    if (this.status === 1) {
-      // Disconnect.
-      this.element.innerText = "Disconnecting...";
-      this.disconnect();
-    } else {
-      // Try to connect.
-      this.element.innerText = "Loading...";
-      this.connect();
-    }
-
-    this.element.disabled = false;
-  };
+  copy = () => {
+    navigator.clipboard.writeText(this.address);
+    this.messenger.new('Address copied in clipboard!', 1)
+  }
 }
 
 export { Wallet };

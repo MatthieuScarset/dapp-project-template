@@ -9,13 +9,18 @@ class Contract {
     this.address = values.address || "0x0";
     this.abi = values.abi || [];
     this.provider = new ethers.providers.Web3Provider(window.ethereum);
-    // @todo Use wallet?
-    // const signer = new ethers.providers.Web3Signer();
+    this.signer = null;
     this.messenger = new Messenger("#messages");
   }
 
   initialize = async () => {
-    this.instance = new ethers.Contract(this.address, this.abi, this.provider);
+    // Try to load signer.
+    await this.provider.send("eth_requestAccounts", []).then(address => {
+      this.signer = this.provider.getSigner();
+    });
+
+    // Instanciate with signer (read/write mode) or provider (read-only mode).
+    this.instance = new ethers.Contract(this.address, this.abi, this.signer ?? this.provider);
 
     await this.instance
       .deployed()
