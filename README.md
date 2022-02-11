@@ -18,6 +18,8 @@ Only requires [node](https://nodejs.org/en/download/) and few dependencies:
 git clone https://github.com/MatthieuScarset/dapp-project-template.git my-dapp
 cd my-dapp
 yarn install
+cp .env.example .env
+# Edit .env file with your credentials.
 yarn compile
 yarn test
 ```
@@ -25,8 +27,6 @@ yarn test
 ## Deploy your contract(s)
 
 ```bash
-cp .env.example .env
-# Edit .env file with your credentials.
 yarn deploy 
 yarn verify
 ```
