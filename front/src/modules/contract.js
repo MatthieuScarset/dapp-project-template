@@ -18,18 +18,21 @@ class Contract {
     this.instance = new ethers.Contract(this.address, this.abi, this.provider);
 
     await this.instance
-      .owner()
-      .then((address) => {
-        let message = "";
-        message += "Connected contract: ";
-        message += "<br>";
-        message += '<code class="block p-2 bg-slate-800 text-white">';
-        message += address;
-        message += "</code>";
+      .deployed()
+      .then(() => {
+        this.instance.owner()
+          .then((address) => {
+            let message = "";
+            message += "Connected contract: ";
+            message += "<br>";
+            message += '<code class="block p-2 bg-slate-800 text-white">';
+            message += address;
+            message += "</code>";
 
-        this.messenger.new(message);
+            this.messenger.new(message, true);
+          })
       })
-      .catch((error) => messenger.new(error, 0, false));
+      .catch((error) => messenger.error(error, true));
   };
 
   get = (key) => {
@@ -45,35 +48,44 @@ class Contract {
     form.title = method.name + ' form';
     form.id = 'contract-' + this.name + '-form-' + method.name;
     form.tabIndex = 0;
+    form.dataset.methodName = method.name;
     form.classList.add('mt-2', 'mb-2', 'p-2', 'border-2', 'bg-gray-200');
 
     form.innerHTML = method.inputs.length < 1 ? 'No inputs' : '';
     method.inputs.forEach(input => {
       let label = document.createElement('label');
       let element = document.createElement('input');
-      let submit = document.createElement('input');
 
       label.htmlFor = this.name + '-input-' + input.name;
       label.innerHTML = input.name;
       label.classList.add('block', 'w-full', 'cursor-pointer');
 
       element.id = this.name + '-input-' + input.name;
-      element.classList.add('block', 'w-full', 'border-2');
-
-      submit.type = 'submit';
-      submit.value = 'Submit';
-      submit.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md',
-        'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600');
+      element.name = input.name;
+      element.placeholder = input.type;
+      element.classList.add('block', 'w-full', 'border-2', 'p-1');
 
       form.appendChild(label);
       form.appendChild(element);
-      form.appendChild(submit);
     });
+
+    let submit = document.createElement('input');
+
+    submit.type = 'submit';
+    submit.value = 'Submit';
+    submit.id = this.name + '-submit';
+    submit.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md',
+      'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600');
+
+    form.appendChild(submit);
+
+    // Take over submit.
+    form.addEventListener("submit", this.onMethodFormSubmit);
 
     return form;
   }
 
-  renderForm = () => {
+  renderForms = () => {
     let details = document.createElement('details');
     details.id = 'contract-' + this.name;
     details.title = this.name;
@@ -124,6 +136,56 @@ class Contract {
     details.appendChild(summary);
     details.appendChild(list);
     return details;
+  };
+
+  // Call a deployed contract's method.
+  // @see https://docs.ethers.io/v5/api/contract/example/#erc20-meta-methods
+  call = async (method, data) => {
+    return await this.instance[method](data);
+  }
+
+  // Events
+  onMethodFormSubmit = async (event) => {
+    event.preventDefault();
+
+    this.messenger.clear();
+
+    let methodForm = event.target;
+    let methodName = methodForm.dataset.methodName;
+    let formData = new FormData(methodForm);
+
+    let args = {};
+    let params = [];
+    for (var pair of formData.entries()) {
+      args[pair[0]] = pair[1];
+      params.push(pair[1]);
+    }
+
+    // Allow custom TX overrides.
+    let txParamsForm = document.getElementById('tx-overrides-form');
+    let txParamsData = new FormData(txParamsForm);
+    let overrides = {}
+    for (var pair of txParamsData.entries()) {
+      let value = pair[1];
+      if (value.length < 1) { continue; }
+      if (parseInt(pair[1])) {
+        value = ethers.BigNumber.from(pair[1]).toString();
+      }
+
+      console.log(value);
+
+      overrides[pair[0]] = value;
+    };
+
+    await this.instance[methodName](...params, overrides)
+      .finally(() => {
+        let msg = 'Called <code>' + methodName + '</code> with:<br>' +
+          'Args: <pre>' + JSON.stringify(args) + '</pre>' +
+          'Overrides: <pre>' + JSON.stringify(overrides) + '</pre>'
+        this.messenger.new(msg);
+      })
+      .then(result => this.messenger.new('Result:<br>' + result, 0, 2))
+      .catch(error => this.messenger.error('Error ' + error.code + ': ' + error.message));
   };
 
 }

@@ -22,7 +22,7 @@
         type="text/css" />
 </head>
 
-<body class="relative h-screen break-word">
+<body class="relative h-screen overflow-x-hidden break-word">
   <header class="max-w-4xl m-auto flex flex-row items-stretch justify-between">
     <a id="logo"
        class="flex flex-row items-center space-x-6 py-6 hover:text-teal-600"
@@ -45,13 +45,60 @@
   </header>
 
   <main class="max-w-4xl m-auto py-6 border-t-2 border-b-2 border-gray-100">
+    <section id="wallet">
+    </section>
+    <section id="overrides">
+      <details open="false"
+               class="border-2 p-4">
+        <summary class="font-bold text-2xl cursor-pointer">Transaction overrides</summary>
+        <p class="text-xs">Use this to add parameters to your calls.</p>
+        <form id="tx-overrides-form"
+              class="flex flex-wrap items-center mt-2 mb-2 p-2 border-2 bg-gray-200">
+          <div class="flex-1 w-1/2 p-2">
+            <label for="nonce"
+                   class="block w-full cursor-pointer">Nonce</label>
+            <input id="nonce"
+                   name="nonce"
+                   type="text"
+                   placeholder="Do you really need this?"
+                   class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+          <div class="flex-1 w-1/2 p-2">
+            <label for="gas-limit"
+                   class="block w-full cursor-pointer">Gas limit</label>
+            <input id="gas-limit"
+                   name="gasLimit"
+                   type="text"
+                   placeholder="21400"
+                   value="30400"
+                   class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+          <div class="flex-1 w-1/2 p-2">
+            <label for="gas-price"
+                   class="block w-full cursor-pointer">Gas price</label>
+            <input id="gas-price"
+                   name="gasPrice"
+                   type="text"
+                   value="550"
+                   placeholder="fast~750|low~520|average~590"
+                   class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+        </form>
+      </details>
+    </section>
     <section id="contracts">
     </section>
   </main>
 
   <!-- Section required by `modules/messages.js` -->
   <section id="messages"
-           class="absolute bottom-6 right-6 h-fit max-w-sm m-auto"></section>
+           class="absolute bottom-6 right-6 h-fit max-w-sm m-auto">
+    <button id="messagesClearAll"
+            class="block w-full text-right cursor-pointer hover:text-teal-600">
+      Clear messages
+    </button>
+
+  </section>
 
   <footer class="max-w-4xl m-auto mx-auto py-10 text-center flex items-center justify-center text-sm text-gray-500">
     <p>Copyright &copy; 2022</p>

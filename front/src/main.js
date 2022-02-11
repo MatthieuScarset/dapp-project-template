@@ -27,7 +27,7 @@ const initialize = async () => {
     message += " or ";
     message += '<a target="_blank" href="https://metamask.io/">Metamask.io</a>';
 
-    messenger.new(message, 0, false);
+    messenger.error(message);
 
     // Stop now.
     return;

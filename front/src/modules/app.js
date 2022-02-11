@@ -12,12 +12,12 @@ class App {
 
     this.contracts.forEach(contract => {
       let name = contract.get('contractName').replace(' ', '-');
-      this.messenger.new("Rendering: " + name);
-      let details = contract.renderForm();
+      this.messenger.new("Rendering: " + name, true);
+      let details = contract.renderForms();
       wrapper.appendChild(details);
     });
 
-    this.messenger.new("Application ready!");
+    this.messenger.new("Application ready!", true);
   };
 }
 

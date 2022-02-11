@@ -5,9 +5,18 @@ class Messenger {
 
   initialize = () => {
     window.addEventListener("newMessage", this.onNew, true);
+    document.querySelector('#messagesClearAll').addEventListener('click', this.onClickClearAll, true);
   };
 
-  new = (content, type = 1, remove = true) => {
+  clear = () => {
+    document.querySelectorAll('.message').forEach((el) => { el.remove() });
+  }
+
+  error = (content, remove = false) => {
+    this.new(content, remove, 0);
+  }
+
+  new = (content, remove = false, type = 1) => {
     window.dispatchEvent(
       new CustomEvent("newMessage", {
         detail: {
@@ -34,8 +43,8 @@ class Messenger {
     closeBtn.classList = "";
     [
       "absolute",
-      "-top-2",
-      "-right-2",
+      "-top-3",
+      "-right-3",
       "bg-white",
       "rounded-md",
       "inline-flex",
@@ -54,7 +63,7 @@ class Messenger {
     });
     closeBtn.innerHTML =
       '<span class="sr-only">Close menu</span>' +
-      '<svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">' +
+      '<svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">' +
       '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />' +
       "</svg>";
     closeBtn.addEventListener("click", this.onClickClose, true);
@@ -67,10 +76,11 @@ class Messenger {
     item.tabIndex = 0;
     item.classList = "";
     [
+      "message",
       "relative",
       "mt-3",
       "p-3",
-      !Boolean(event.detail.type) ? "bg-red-500" : "bg-white",
+      !Boolean(event.detail.type) ? "bg-red-500" : (event.detail.type > 1 ? "bg-teal-400" : "bg-white"),
       !Boolean(event.detail.type) ? "text-white" : "text-black",
       "rounded",
       "shadow",
@@ -100,6 +110,10 @@ class Messenger {
       }
     });
   };
+
+  onClickClearAll = (event) => {
+    this.clear();
+  }
 }
 
 export { Messenger };

@@ -27,13 +27,13 @@ class Wallet {
     message +=
       this.status == 1
         ? "Connected wallet: " +
-          "<br>" +
-          '<code class="block p-2 bg-slate-800 text-white">' +
-          this.getAccount() +
-          "</code>"
+        "<br>" +
+        '<code class="block p-2 bg-slate-800 text-white">' +
+        this.getAccount() +
+        "</code>"
         : "";
 
-    this.messenger.new(message);
+    this.messenger.new(message, true);
   };
 
   // Element.
@@ -42,8 +42,8 @@ class Wallet {
       this.status == -1
         ? "Reconnect"
         : this.status == 1
-        ? "Disconnect"
-        : "Connect";
+          ? "Disconnect"
+          : "Connect";
   };
 
   // Utility.
@@ -51,20 +51,20 @@ class Wallet {
     await window.ethereum
       .request({ method: "eth_requestAccounts" })
       .then((accounts) => {
-        this.messenger.new("Wallet connected successfully");
+        this.messenger.new("Wallet connected successfully", true);
         this.setAccount(accounts[0]);
         this.status = 1;
         this.label();
       })
       .catch((error) => {
-        this.messenger.new(error.code + " " + error.message, 0);
+        this.messenger.error(error.code + " " + error.message, true);
         this.disconnect();
         this.label();
       });
   };
 
   disconnect = () => {
-    this.messenger.new("Wallet disconnected");
+    this.messenger.new("Wallet disconnected", true);
     this.removeAccount();
     this.status = -1;
     this.label();
