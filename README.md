@@ -27,8 +27,8 @@ yarn test
 ## Deploy your contract(s)
 
 ```bash
-yarn deploy 
-yarn verify
+yarn run deploy 
+yarn run verify
 ```
 
 
