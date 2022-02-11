@@ -49,22 +49,25 @@ class Contract {
 
     form.innerHTML = method.inputs.length < 1 ? 'No inputs' : '';
     method.inputs.forEach(input => {
-      let formElement = document.createElement('div');
       let label = document.createElement('label');
       let element = document.createElement('input');
-
-      formElement.classList.add('flex', 'items-center');
+      let submit = document.createElement('input');
 
       label.htmlFor = this.name + '-input-' + input.name;
       label.innerHTML = input.name;
-      label.classList.add('flex-1');
+      label.classList.add('block', 'w-full', 'cursor-pointer');
 
       element.id = this.name + '-input-' + input.name;
-      element.classList.add('border-2');
+      element.classList.add('block', 'w-full', 'border-2');
 
-      formElement.appendChild(label);
-      formElement.appendChild(element);
-      form.appendChild(formElement);
+      submit.type = 'submit';
+      submit.value = 'Submit';
+      submit.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md',
+        'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600');
+
+      form.appendChild(label);
+      form.appendChild(element);
+      form.appendChild(submit);
     });
 
     return form;
