@@ -45,20 +45,29 @@ class Contract {
     form.title = method.name + ' form';
     form.id = 'contract-' + this.name + '-form-' + method.name;
     form.tabIndex = 0;
-    form.classList.add('mt-2', 'mb-2', 'p-2', 'border-2');
+    form.classList.add('mt-2', 'mb-2', 'p-2', 'border-2', 'bg-gray-200');
 
+    form.innerHTML = method.inputs.length < 1 ? 'No inputs' : '';
     method.inputs.forEach(input => {
-      let element = this.renderInputForm(input);
-      form.appendChild(element);
+      let formElement = document.createElement('div');
+      let label = document.createElement('label');
+      let element = document.createElement('input');
+
+      formElement.classList.add('flex', 'items-center');
+
+      label.htmlFor = this.name + '-input-' + input.name;
+      label.innerHTML = input.name;
+      label.classList.add('flex-1');
+
+      element.id = this.name + '-input-' + input.name;
+      element.classList.add('border-2');
+
+      formElement.appendChild(label);
+      formElement.appendChild(element);
+      form.appendChild(formElement);
     });
 
     return form;
-  }
-
-  renderInputForm = (input) => {
-    let element = document.createElement('p');
-
-    return element;
   }
 
   renderForm = () => {
@@ -89,13 +98,18 @@ class Contract {
       title.innerHTML = method.name;
       title.tabIndex = 0;
 
-      description.classList.add('text-sm');
+      description.classList.add('flex', 'items-center', 'justify-between', 'text-xs');
       description.tabIndex = 0;
-      description.innerHTML = "Returns: ";
+      description.innerHTML = "";
+      description.innerHTML += '<span class="flex-1 italic">' + method.stateMutability + '</span>';
+      description.innerHTML += '<span class="flex flex-row items-center">';
       description.innerHTML += (method.outputs.length < 1 ? "void" : '');
       method.outputs.forEach(output => {
-        description.innerHTML += [output.name, output.type].filter(word => word.length > 0).join(': ');
+        description.innerHTML += '<span class="bg-gray-200 p-0.5">' +
+          [output.name, output.type].filter(word => word.length > 0).join(': ') +
+          "</span>";
       });
+      description.innerHTML += "</span>";
 
       item.appendChild(title);
       item.appendChild(description);
