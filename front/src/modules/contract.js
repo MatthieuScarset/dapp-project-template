@@ -21,13 +21,14 @@ class Contract {
       .deployed()
       .then(() => {
         this.instance.owner()
-          .then((address) => {
+          .then((owner) => {
             let message = "";
             message += "Connected contract: ";
             message += "<br>";
-            message += '<code class="block p-2 bg-slate-800 text-white">';
-            message += address;
-            message += "</code>";
+            message += '<code class="block p-2 bg-slate-800 text-white">' + this.address + "</code>";
+            message += "Owner by: ";
+            message += "<br>";
+            message += '<code class="block p-2 bg-slate-800 text-white">' + owner + "</code>";
 
             this.messenger.new(message, true);
           })

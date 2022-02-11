@@ -11,7 +11,7 @@ const config = {
     {
       "name": "Contract",
       "path": "/contracts/Contract.sol/Contract.json",
-      "address": "0x0-use-yarn-deploy-to-get-contract-address",
+      "address": "0x0-run:`yarn deploy`-and-get-your-contract-address",
       "abi": []
     }
   ]
