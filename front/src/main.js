@@ -57,12 +57,15 @@ const initialize = async () => {
         let contract = new Contract(contractDefinition);
         contract.initialize();
         contracts.push(contract);
+      })
+      .then(() => {
+        // Run custom application now.
+        localStorage.setItem('contracts', contracts)
+        const app = new App(messenger, wallet, contracts, localStorage);
+        app.run();
       });
   });
 
-  // Run custom application now.
-  const app = new App(messenger, wallet, contracts, localStorage);
-  app.run();
 };
 
 window.addEventListener("DOMContentLoaded", initialize);

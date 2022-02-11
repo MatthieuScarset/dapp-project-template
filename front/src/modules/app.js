@@ -7,7 +7,17 @@ class App {
   }
 
   run = async () => {
-    this.messenger.new("Application is ready, enjoy!");
+    // Render default form to interact with your contract(s).
+    let wrapper = document.getElementById('contracts')
+
+    this.contracts.forEach(contract => {
+      let name = contract.get('contractName').replace(' ', '-');
+      this.messenger.new("Rendering: " + name);
+      let details = contract.renderForm();
+      wrapper.appendChild(details);
+    });
+
+    this.messenger.new("Application ready!");
   };
 }
 

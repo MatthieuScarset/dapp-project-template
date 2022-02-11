@@ -1,98 +1,91 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Dapp project template</title>
-    <meta
-      name="description"
-      content="An amazing dapp to make your life better."
-    />
-    <meta
-      name="keywords"
-      content="dapp, JavaScript, Solidity, Ethereum, Blockchain"
-    />
-    <meta name="author" content="Matthieu SCARSET" />
-    <link rel="icon" type="image/png" href="/assets/icon.png" />
-    <link rel="stylesheet" href="/src/main.css" type="text/css" />
-  </head>
 
-  <body class="relative h-screen break-word">
-    <header
-      class="max-w-4xl m-auto flex flex-row items-stretch justify-between"
-    >
-      <a
-        id="logo"
-        class="flex flex-row items-center space-x-6 py-6 hover:text-teal-600"
-        href="/"
-      >
-        <img class="h-8 w-auto sm:h-10 px-2" src="assets/logo.png" alt="Logo" />
-        <h1 class="contract-name" tabindex="0">Dapp project template</h1>
-      </a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible"
+        content="ie=edge" />
+  <title>Dapp project template</title>
+  <meta name="description"
+        content="An amazing dapp to make your life better." />
+  <meta name="keywords"
+        content="dapp, JavaScript, Solidity, Ethereum, Blockchain" />
+  <meta name="author"
+        content="Matthieu SCARSET" />
+  <link rel="icon"
+        type="image/png"
+        href="/assets/icon.png" />
+  <link rel="stylesheet"
+        href="/src/main.css"
+        type="text/css" />
+</head>
 
-      <nav class="flex space-x-10 px-2" role="main">
-        <button
-          id="walletButton"
-          class="cursor-pointer hover:text-teal-600"
-          disabled
-        >
-          Connect
-        </button>
-      </nav>
-    </header>
+<body class="relative h-screen break-word">
+  <header class="max-w-4xl m-auto flex flex-row items-stretch justify-between">
+    <a id="logo"
+       class="flex flex-row items-center space-x-6 py-6 hover:text-teal-600"
+       href="/">
+      <img class="h-8 w-auto sm:h-10 px-2"
+           src="assets/logo.png"
+           alt="Logo" />
+      <h1 class="contract-name"
+          tabindex="0">Dapp project template</h1>
+    </a>
 
-    <main class="max-w-4xl m-auto py-6 border-t-2 border-b-2 border-gray-100">
-      <section id="contract">
-        <p class="text-4xl text-center">Your dapp code goes here!</p>
-      </section>
-    </main>
+    <nav class="flex space-x-10 px-2"
+         role="main">
+      <button id="walletButton"
+              class="cursor-pointer hover:text-teal-600"
+              disabled>
+        Connect
+      </button>
+    </nav>
+  </header>
 
-    <!-- Section required by `modules/messages.js` -->
-    <section
-      id="messages"
-      class="absolute bottom-6 right-6 h-fit max-w-sm m-auto"
-    ></section>
+  <main class="max-w-4xl m-auto py-6 border-t-2 border-b-2 border-gray-100">
+    <section id="contracts">
+    </section>
+  </main>
 
-    <footer
-      class="max-w-4xl m-auto mx-auto py-10 text-center flex items-center justify-center text-sm text-gray-500"
-    >
-      <p>Copyright &copy; 2022</p>
-      <p class="ml-3 border-l border-gray-200 pl-3">
-        Absolutely
-        <a
-          target="_blank"
-          title="Read license in a new tab"
-          class="hover:text-teal-600"
-          href="./LICENSE"
-        >
-          no rights reserved</a
-        >
-      </p>
-      <p class="ml-3 border-l border-gray-200 pl-3">
-        <a
-          target="_blank"
-          title="Learn more about this project"
-          class="hover:text-teal-600"
-          href="https://github.com/MatthieuScarset/dapp-project-template"
-          >Github</a
-        >
-      </p>
-      <p class="ml-3 border-l border-gray-200 pl-3">
-        <a
-          target="_blank"
-          title="I am human"
-          class="hover:text-teal-600"
-          href="./humans.txt"
-          >whoami</a
-        >
-      </p>
-    </footer>
+  <!-- Section required by `modules/messages.js` -->
+  <section id="messages"
+           class="absolute bottom-6 right-6 h-fit max-w-sm m-auto"></section>
 
-    <!-- Vanilla JS -->
-    <script type="module" src="/src/main.js" defer></script>
+  <footer class="max-w-4xl m-auto mx-auto py-10 text-center flex items-center justify-center text-sm text-gray-500">
+    <p>Copyright &copy; 2022</p>
+    <p class="ml-3 border-l border-gray-200 pl-3">
+      Absolutely
+      <a target="_blank"
+         title="Read license in a new tab"
+         class="hover:text-teal-600"
+         href="./LICENSE">
+        no rights reserved</a>
+    </p>
+    <p class="ml-3 border-l border-gray-200 pl-3">
+      <a target="_blank"
+         title="Learn more about this project"
+         class="hover:text-teal-600"
+         href="https://github.com/MatthieuScarset/dapp-project-template">Github</a>
+    </p>
+    <p class="ml-3 border-l border-gray-200 pl-3">
+      <a target="_blank"
+         title="I am human"
+         class="hover:text-teal-600"
+         href="./humans.txt">whoami</a>
+    </p>
+  </footer>
 
-    <!-- Do not use in production! -->
-    <script type="module" src="/lib/tailwindcss.js" defer></script>
-  </body>
+  <!-- Vanilla JS -->
+  <script type="module"
+          src="/src/main.js"
+          defer></script>
+
+  <!-- Do not use in production! -->
+  <script type="module"
+          src="/lib/tailwindcss.js"
+          defer></script>
+</body>
+
 </html>
