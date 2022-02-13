@@ -2,7 +2,7 @@
   "name": "dapp-project-template",
   "version": "1.0.0",
   "description": "A project template for your smart contract.",
-  "private": true,
+  "main": "scripts/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MatthieuScarset/dapp-project-template.git"
@@ -17,22 +17,16 @@
     "url": "https://github.com/MatthieuScarset/dapp-project-template/issues"
   },
   "homepage": "https://github.com/MatthieuScarset/dapp-project-template#readme",
-  "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.4",
-    "@nomiclabs/hardhat-etherscan": "^3.0.0",
-    "@nomiclabs/hardhat-waffle": "^2.0.2",
-    "chai": "^4.3.6",
-    "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.5.4",
-    "hardhat": "^2.8.3",
-    "@openzeppelin/contracts": "^4.4.2",
-    "dotenv": "^16.0.0"
-  },
   "dependencies": {},
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.4.2"
+  },
   "scripts": {
-    "compile": "npx hardhat compile",
-    "test": "npx hardhat test tests/Contract.js",
-    "deploy": "npx hardhat contract:deploy",
-    "verify": "npx hardhat contract:verify"
+    "dev": "yarn run chain & yarn run server",
+    "chain": "ganache -p 7545",
+    "server": "node lib/server.js",
+    "back": "truffle migrate --reset",
+    "test": "truffle test",
+    "front": "echo \"Nothing specific to run for your frontend.\""
   }
 }

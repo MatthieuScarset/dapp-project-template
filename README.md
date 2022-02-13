@@ -4,50 +4,28 @@
 
 This is a default template to kickstart your dapp development.
 
-Built with [Hardhat](https://hardhat.org/). 
+Requires:
+- [NodeJS](https://nodejs.org/en/download/): `apt install nodejs`. 
+- [Truffle](https://github.com/trufflesuite/truffle) and [Ganache](https://github.com/trufflesuite/ganache): `npm install --global truffle ganache`
 
-Only requires [node](https://nodejs.org/en/download/) and few dependencies:
-
-- `yarn` for package management (recommended over `npm`)
-- `hardhat`, `ethers`, `chai`, `ethereum-waffle` and `dotenv` for testing 
-- `@openzeppelin/contracts` for *quick* and *secure* smart contract development
+Out of the box, the only dependency is `@openzeppelin/contracts` for *quick* and *secure* smart contract development.
 
 ## Getting started
 
-```bash
-git clone https://github.com/MatthieuScarset/dapp-project-template.git my-dapp
-cd my-dapp
-yarn install
-yarn compile
-yarn test
-```
+- `yarn`:       First install
+- `yarn dev`:   Start your _dev_ environment
+- `yarn back`:  Work on your smart contract(s)
+- `yarn front`: Work on your frontend
 
-## Deploy your contract(s)
+## Where to go from here?
 
-```bash
-cp .env.example .env
-# Edit .env file with your credentials.
-yarn deploy 
-yarn verify
-```
+You could:
+1. Deploy your contract(s) on a testnet
+1. Deploy your frontend on IPFS
 
+Learn [how to deploy and verify your contract here](https://kalis.me/verify-truffle-smart-contracts-etherscan/).
 
-## Frontend
-
-A simple frontend application is included in the `front/` folder.
-
-```bash
-cd front/
-yarn install
-yarn init 
-yarn serve
-```
-
-Open [localhost:8080](http://localhost:8080) and you're good to go.
-
-[Read more here](front/README.md).
-
-Enjoy!
+Learn [about IPFS here](https://ipfs.io/).
 
 ---
 

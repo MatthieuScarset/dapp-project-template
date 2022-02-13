@@ -1,6 +1,4 @@
 node_modules
-artifacts
-dist
-cache
+build
 .env
-config.json
+*.log
