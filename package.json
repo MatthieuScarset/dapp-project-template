@@ -2,7 +2,7 @@
   "name": "dapp-project-template",
   "version": "1.0.0",
   "description": "A project template for your smart contract.",
-  "main": "scripts/index.js",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MatthieuScarset/dapp-project-template.git"
@@ -19,14 +19,17 @@
   "homepage": "https://github.com/MatthieuScarset/dapp-project-template#readme",
   "dependencies": {},
   "devDependencies": {
-    "@openzeppelin/contracts": "^4.4.2"
+    "@openzeppelin/contracts": "^4.5.0"
   },
   "scripts": {
-    "dev": "yarn run chain & yarn run server",
+    "start": "yarn run chain & yarn run server",
     "chain": "ganache -p 7545",
-    "server": "node lib/server.js",
-    "back": "truffle migrate --reset",
     "test": "truffle test",
-    "front": "echo \"Nothing specific to run for your frontend.\""
+    "compile": "truffle compile",
+    "migrate": "truffle migrate --reset",
+    "server": "node lib/server.js",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --config webpack.config.js --watch",
+    "example:script": "npx truffle exec --network development scripts/example.js"
   }
 }
