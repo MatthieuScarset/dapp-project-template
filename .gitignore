@@ -1,4 +1,7 @@
 node_modules
-build
 .env
 *.log
+
+build/main.css
+build/main.js
+build/contracts

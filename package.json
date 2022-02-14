@@ -22,14 +22,14 @@
     "@openzeppelin/contracts": "^4.5.0"
   },
   "scripts": {
-    "start": "yarn run chain & yarn run server",
+    "start": "yarn build && (yarn run chain & yarn run server & yarn watch)",
     "chain": "ganache -p 7545",
     "test": "truffle test",
     "compile": "truffle compile",
     "migrate": "truffle migrate --reset",
-    "server": "node lib/server.js",
-    "build": "webpack --config webpack.config.js",
-    "watch": "webpack --config webpack.config.js --watch",
+    "server": "npx webpack serve",
+    "build": "tailwindcss -i css/main.css -o build/main.css && webpack --config webpack.config.js",
+    "watch": "tailwindcss -i css/main.css -o build/main.css --watch & webpack --config webpack.config.js --watch",
     "example:script": "npx truffle exec --network development scripts/example.js"
   }
 }

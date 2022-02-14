@@ -1,12 +1,19 @@
-import { ethers } from "../lib/web3.min.js";
+import { Messenger } from './messenger.js';
+import { Wallet } from './wallet.js';
 
+// Start application.
 async function main(callback) {
-  // instantiate web3 and creating web3 connection
-  // const web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
-  // window.web3 = web3;
-  console.log(ethers);
+  if (!Boolean(window.ethereum)) {
+    return Messenger.error('No ethereum provider found.' +
+      '<br>' +
+      'Please consider using one extension such as:' +
+      '<br>' +
+      '<a href="" target="_blank">Metamask</a>' +
+      'or Frame.sh'
+    );
+  }
+
+  const wallet = new Wallet();
 }
 
-window.addEventListener('load', async () => {
-  await main();
-})
+window.addEventListener('load', main(), true);
