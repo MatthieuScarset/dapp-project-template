@@ -14,11 +14,9 @@ class Wallet {
     ethereum.on('chainChanged', this.networkChanged, true);
   }
 
-  // Refresh Web3 object in window.
-  // This way other components can get it, as follow:
-  // const { web3 } = window;
   refresh = () => {
     try {
+      // Refresh Web3 object.
       window.web3 = new Web3(ethereum);
     } catch (e) {
       Messenger.error(e);
@@ -34,32 +32,32 @@ class Wallet {
   }
 
   connect = async () => {
-    try {
-      await ethereum.request({ method: 'eth_requestAccounts' })
-        .then(accounts => {
-          let account = accounts[0];
+    Messenger.new('Connecting...', true);
 
-          if (!account) {
-            this.label.classList.remove('hidden');
-            this.address.classList.add('hidden');
-            this.address.innerHTML = '';
-            this.btn.removeEventListener('click', this.copy);
-            this.btn.addEventListener('click', this.connect, true);
-          }
+    await ethereum.request({ method: 'eth_requestAccounts' })
+      .then(accounts => {
+        let account = accounts[0];
 
-          if (account) {
-            this.label.classList.add('hidden');
-            this.address.classList.remove('hidden');
-            this.address.innerHTML = account;
-            Messenger.new('Connected as:<br>' + account, true);
-            this.btn.removeEventListener('click', this.connect, true);
-            this.btn.addEventListener('click', this.copy);
-          }
-        });
+        if (!account) {
+          this.label.classList.remove('hidden');
+          this.address.classList.add('hidden');
+          this.address.innerHTML = '';
+          this.btn.removeEventListener('click', this.copy);
+          this.btn.addEventListener('click', this.connect, true);
 
-    } catch (e) {
-      Messenger.error(e.code + ': ' + e.message, true);
-    }
+          this.refresh();
+        }
+
+        if (account) {
+          this.label.classList.add('hidden');
+          this.address.classList.remove('hidden');
+          this.address.innerHTML = account;
+          Messenger.new('Connected as:<br>' + account, true);
+          this.btn.removeEventListener('click', this.connect, true);
+          this.btn.addEventListener('click', this.copy);
+        }
+      })
+      .catch(e => Messenger.error(e.code + ': ' + e.message, true));
   }
 
   accountsChanged = async (accounts) => {
@@ -69,7 +67,6 @@ class Wallet {
   }
 
   networkChanged = async (chainId) => {
-    console.log(chainId);
     Messenger.new('Blockchain switched to: ' + chainId);
     Messenger.new('Reloading window to reflect changes...');
     setTimeout(() => { window.location.reload() }, 5000);

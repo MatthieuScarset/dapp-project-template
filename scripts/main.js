@@ -3,6 +3,8 @@ import { Wallet } from './wallet.js';
 
 // Start application.
 async function main(callback) {
+  new Messenger();
+
   if (!Boolean(window.ethereum)) {
     return Messenger.error('No ethereum provider found.' +
       '<br>' +
@@ -13,7 +15,7 @@ async function main(callback) {
     );
   }
 
-  const wallet = new Wallet();
+  new Wallet();
 }
 
-window.addEventListener('load', main(), true);
+window.addEventListener('load', main, true);

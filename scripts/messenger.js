@@ -27,11 +27,7 @@ class Messenger {
     closeButton.classList.add("bg-white", "rounded-md", "text-gray-400");
     closeButton.classList.add("hover:opacity-50", "hover:text-gray-500", "hover:bg-gray-100");
     closeButton.classList.add("focus:outline-none", "focus:ring-2", "focus:ring-inset", "focus:ring-indigo-50")
-    closeButton.addEventListener("click", (event) => {
-      event.path.forEach((el) => {
-        if (el.id && el.id.indexOf("message-") == 0) { el.remove(); return; }
-      });
-    }, true);
+    closeButton.addEventListener("click", (event) => { event.target.closest('.message').remove(); }, true);
 
     let content = document.createElement('div');
     content.innerHTML = msg;
