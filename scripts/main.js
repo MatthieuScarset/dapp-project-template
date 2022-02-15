@@ -8,8 +8,8 @@ async function main(callback) {
       '<br>' +
       'Please consider using one extension such as:' +
       '<br>' +
-      '<a href="" target="_blank">Metamask</a>' +
-      'or Frame.sh'
+      '<a class="font-bold" style="text-decoration: underline" href="https://metamask.io/" target="_blank">Metamask</a>' + ' (most used) or ' +
+      '<a class="font-bold" style="text-decoration: underline" href="https://frame.sh/" target="_blank">Frame</a>' + ' (most private)'
     );
   }
 
