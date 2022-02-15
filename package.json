@@ -22,14 +22,18 @@
     "@openzeppelin/contracts": "^4.5.0"
   },
   "scripts": {
-    "start": "yarn build && (yarn run chain & yarn run server & yarn watch)",
-    "chain": "ganache -p 7545",
-    "test": "truffle test",
-    "compile": "truffle compile",
-    "migrate": "truffle migrate --reset",
-    "server": "npx webpack serve",
-    "build": "tailwindcss -i css/main.css -o build/main.css && webpack --config webpack.config.js",
-    "watch": "tailwindcss -i css/main.css -o build/main.css --watch & webpack --config webpack.config.js --watch",
+    "start": "yarn server && yarn backend:migrate && yarn watch",
+    "stop": "pkill node && pkill webpack",
+    "watch": "yarn run frontend:watch",
+    "build": "yarn run backend:build && yarn run frontend:build",
+    "server": "yarn backend:server & yarn frontend:server",
+    "backend:server": "ganache -p 7545 > /dev/null &",
+    "backend:migrate": "truffle migrate --reset",
+    "backend:build": "truffle compile",
+    "backend:test": "truffle test",
+    "frontend:server": "npx webpack serve > /dev/null &",
+    "frontend:build": "tailwindcss -i css/main.css -o build/main.css && webpack --config webpack.config.js",
+    "frontend:watch": "tailwindcss -i css/main.css -o build/main.css --watch & webpack --config webpack.config.js --watch",
     "example:script": "npx truffle exec --network development scripts/example.js"
   }
 }
