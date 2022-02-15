@@ -22,18 +22,19 @@
     "@openzeppelin/contracts": "^4.5.0"
   },
   "scripts": {
-    "start": "yarn server && yarn backend:migrate && yarn watch",
+    "start": "yarn server && yarn back:migrate && yarn watch",
     "stop": "pkill node && pkill webpack",
-    "watch": "yarn run frontend:watch",
-    "build": "yarn run backend:build && yarn run frontend:build",
-    "server": "yarn backend:server & yarn frontend:server",
-    "backend:server": "ganache -p 7545 > /dev/null &",
-    "backend:migrate": "truffle migrate --reset",
-    "backend:build": "truffle compile",
-    "backend:test": "truffle test",
-    "frontend:server": "npx webpack serve > /dev/null &",
-    "frontend:build": "tailwindcss -i css/main.css -o build/main.css && webpack --config webpack.config.js",
-    "frontend:watch": "tailwindcss -i css/main.css -o build/main.css --watch & webpack --config webpack.config.js --watch",
+    "watch": "yarn front:watch",
+    "build": "yarn back:build && yarn front:build",
+    "server": "yarn back:server & yarn front:server",
+    "back:server": "ganache -p 7545 > /dev/null &",
+    "back:migrate": "truffle migrate --reset",
+    "back:build": "truffle compile",
+    "back:test": "truffle test",
+    "front:server": "npx webpack serve > /dev/null &",
+    "front:assets": "cp LICENSE build/ && cp humans.txt build/ && cp index.html build/ && cp -r assets/ build/",
+    "front:build": "yarn front:assets && tailwindcss -i css/main.css -o build/main.css && webpack --config webpack.config.js",
+    "front:watch": "yarn front:assets && tailwindcss -i css/main.css -o build/main.css --watch & webpack --config webpack.config.js --watch",
     "example:script": "npx truffle exec --network development scripts/example.js"
   }
 }
