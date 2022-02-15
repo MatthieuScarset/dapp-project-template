@@ -1,5 +1,5 @@
 class Messenger {
-  static timeout = 50000;
+  static timeout = 3000;
 
   static icon = '<span class="sr-only">Close menu</span>' +
     '<svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">' +

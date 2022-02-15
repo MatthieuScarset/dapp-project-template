@@ -1,23 +1,27 @@
 import { Messenger } from "./messenger.js";
 
-const { ethereum, web3 } = window;
+const { ethereum } = window;
 
 class Wallet {
   constructor() {
+    this.account = false;
     this.btn = document.querySelector('#connect');
     this.label = this.btn.querySelector('.label');
     this.address = this.btn.querySelector('.address');
     this.btn.addEventListener('click', this.connect, true);
-    this.connect();
 
+    // Register events.
     ethereum.on('accountsChanged', this.accountsChanged, true);
     ethereum.on('chainChanged', this.networkChanged, true);
+
+    // Open wallet.
+    this.connect();
   }
 
   refresh = () => {
     try {
       // Refresh Web3 object.
-      window.web3 = new Web3(ethereum);
+      window.web3 = new Web3(window.ethereum);
     } catch (e) {
       Messenger.error(e);
     }
@@ -32,8 +36,6 @@ class Wallet {
   }
 
   connect = async () => {
-    Messenger.new('Connecting...', true);
-
     await ethereum.request({ method: 'eth_requestAccounts' })
       .then(accounts => {
         let account = accounts[0];
@@ -44,8 +46,6 @@ class Wallet {
           this.address.innerHTML = '';
           this.btn.removeEventListener('click', this.copy);
           this.btn.addEventListener('click', this.connect, true);
-
-          this.refresh();
         }
 
         if (account) {
@@ -56,8 +56,28 @@ class Wallet {
           this.btn.removeEventListener('click', this.connect, true);
           this.btn.addEventListener('click', this.copy);
         }
+
+        return account;
       })
-      .catch(e => Messenger.error(e.code + ': ' + e.message, true));
+      .catch(e => {
+        switch (e.code) {
+          case 4001:  // Wallet closed.
+          case 32002: // Another request exists.
+            Messenger.error(e.code + ': ' + e.message, true);
+            break;
+          default:
+            // Fail silently.
+            console.log(e.code, e.message);
+            break;
+        }
+      })
+      .finally(account => {
+        this.account = account;
+
+        if (account) {
+          Messenger.new('Connected as: ' + account, true);
+        }
+      });
   }
 
   accountsChanged = async (accounts) => {
