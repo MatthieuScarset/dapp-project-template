@@ -2,11 +2,11 @@ import { Contract } from './contract';
 import { Messenger } from './messenger';
 import { Wallet } from './wallet';
 
+// Local copy of Web3 lib for convenience - not safe for production!
 const Web3 = require('../lib/web3.min.js');
-const web3 = new Web3(Web3.givenProvider || window.ethereum || "ws://localhost:7545");
 
+// Add/Remove your contracts' name here.
 const contracts = ['MyFriends', 'MyNFT'];
-const contractsWrapper = document.querySelector('#contracts');
 
 // Start application.
 async function main(callback) {
@@ -22,61 +22,70 @@ async function main(callback) {
     );
   }
 
-  // Allow easy use of Web3 library from components.
-  // @see Contracts::instance();
-  window.web3 = web3;
+  // Refresh Web3 object for easier use within other components.
+  window.web3 = new Web3(Web3.givenProvider || window.ethereum || "ws://localhost:7545");
 
+  // Connect user.
   new Wallet();
 
+  // Build contracts info.
   contracts.forEach(async (name) => {
     await Contract.fetch(name)
-      .then(data => {
-        let contract = new Contract(name, data);
-
-        contract.init();
-
-        let details = document.createElement('details');
-        details.id = 'contract-' + name;
-        details.title = name;
-        details.open = true;
-        details.classList.add('p-4', 'border-2');
-
-        let summary = document.createElement('summary');
-        summary.innerHTML = name;
-        summary.classList.add('font-bold', 'text-2xl', 'cursor-pointer');
-
-        let description = document.createElement('p');
-        description.innerHTML = 'View <a class="underline" href="/contracts/' + name + '.json" target="_blank">full contract\'s details</a>.';
-        description.classList.add('text-xs');
-
-        let list = document.createElement('div');
-        list.classList.add('flex', 'flex-wrap', 'items-stretch');
-
-        // Build each methods' form.
-        contract.methods().forEach(name => {
-          let form = contract.methodForm(name);
-          let titles = form.querySelectorAll('h3');
-          let labels = form.querySelectorAll('label');
-          let inputs = form.querySelectorAll('input:not([type="submit"]');
-          let submits = form.querySelectorAll('input[type="submit"]');
-
-          // Custom theming.
-          form.classList.add('flex-1', 'basis-1/2', 'p-6', 'fake-bg');
-          form.classList.add('md:max-w-1/2');
-          titles.forEach(el => el.classList.add('font-bold'));
-          labels.forEach(el => el.classList.add('block', 'w-full', 'cursor-pointer'));
-          inputs.forEach(el => el.classList.add('block', 'w-full', 'border-2', 'p-1'));
-          submits.forEach(el => el.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md', 'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600'));
-
-          list.appendChild(form);
-        });
-
-        details.appendChild(summary);
-        details.appendChild(description);
-        details.appendChild(list);
-        contractsWrapper.appendChild(details);
-      });
+      // Instanciate our contract from the freshly fetched JSON file.
+      .then(definition => new Contract(definition))
+      // Render forms to play with our contract from frontend.
+      .then(contract => renderContractForm(contract));
   });
+}
+
+// Helper function to customize UX.
+function renderContractForm(contract = {}) {
+  let list = document.createElement('div');
+  list.classList.add('flex', 'flex-wrap', 'items-stretch');
+
+  let methods = contract.methods();
+  for (const [methodName, methodDefinition] of Object.entries(methods)) {
+    // ===================================================
+    // This is where magic happens.
+    // ===================================================
+    let form = contract.renderMethodForm(methodDefinition);
+
+    // Custom theming
+    let titles = form.querySelectorAll('h3');
+    let labels = form.querySelectorAll('label');
+    let inputs = form.querySelectorAll('input:not([type="submit"]');
+    let submits = form.querySelectorAll('input[type="submit"]');
+
+    form.classList.add('flex-1', 'basis-1/2', 'p-6', 'fake-bg');
+    form.classList.add('md:max-w-1/2');
+    titles.forEach(el => el.classList.add('font-bold'));
+    labels.forEach(el => el.classList.add('block', 'w-full', 'cursor-pointer'));
+    inputs.forEach(el => el.classList.add('block', 'w-full', 'border-2', 'p-1'));
+    submits.forEach(el => el.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md', 'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600'));
+
+    list.appendChild(form);
+  };
+
+  // Custom elements for our frontend.
+  let details = document.createElement('details');
+  details.id = 'contract-' + contract.name;
+  details.title = 'Toggle "' + contract.name + '.sol" contract\'s method forms';
+  details.open = true;
+  details.classList.add('p-4', 'border-2');
+
+  let summary = document.createElement('summary');
+  summary.innerHTML = contract.name;
+  summary.classList.add('font-bold', 'text-2xl', 'cursor-pointer');
+
+  let description = document.createElement('p');
+  description.innerHTML = 'View <a class="underline" href="/contracts/' + contract.name + '.json" target="_blank">full contract\'s details</a>.';
+  description.classList.add('text-xs');
+
+  details.appendChild(summary);
+  details.appendChild(description);
+  details.appendChild(list);
+
+  document.querySelector('#contracts').appendChild(details);
 }
 
 window.addEventListener('load', main, true);

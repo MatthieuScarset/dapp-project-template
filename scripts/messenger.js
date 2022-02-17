@@ -42,12 +42,12 @@ class Messenger {
     wrapper.appendChild(item);
   }
 
-  constructor() {
-    document.querySelector('#messagesClear').addEventListener('click', this.onClickClearAll, true);
+  static clear = () => {
+    document.querySelectorAll('.message').forEach((el) => { el.remove() });
   }
 
-  onClickClearAll = (event) => {
-    document.querySelectorAll('.message').forEach((el) => { el.remove() });
+  constructor() {
+    document.querySelector('#messagesClear').addEventListener('click', this.clear, true);
   }
 
 }

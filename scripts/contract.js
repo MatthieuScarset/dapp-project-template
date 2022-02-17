@@ -1,23 +1,18 @@
 import { Messenger } from './messenger';
 
 class Contract {
-  constructor(name, definition, address) {
-    this.name = name;
+  constructor(definition) {
     this.definition = definition;
-    this.abi = definition.abi ?? [];
-
-    // Get address from JSON, if not provided.
-    let _list = definition.networks;
-    let _last_event = Object.keys(_list).pop();
-    this.address = address ?? _list[_last_event].address;
-
+    this.name = definition.contractName;
+    this.abi = definition.abi;
+    this.address = Object.keys(definition.networks).pop().address;
     this.instance = undefined;
   }
 
   static fetch = async (name) => {
     try {
       return await fetch('/contracts/' + name + '.json')
-        .then(response => response.json());
+        .then(response => response.json())
     } catch (e) {
       Messenger.error('Error fetching data for ' + name + ' contract:<br>' + e.message);
       return {};
@@ -25,28 +20,54 @@ class Contract {
   }
 
   methods = () => {
-    return this.abi.filter((method) => method.type == 'function');
+    let methods = {};
+    this.abi.filter((method) => method.type == 'function')
+      .forEach(method => (methods[method.name] = method));
+    return methods;
   }
 
-  methodForm = (method) => {
+  events = () => {
+    let events = [];
+    this.abi.filter((method) => method.type == 'event')
+      .forEach(event => events[event.name] = event);
+    return events;
+  }
+
+  devdoc = (method) => {
+    let key = method + '(' + JSON.stringify(method.inputs) + ')';
+    return this.definition.devdoc[ley] || { 'methods': {} };
+  }
+
+  userdoc = (method) => {
+    let key = method + '(' + JSON.stringify(method.inputs) + ')';
+    return this.definition.userdoc[key] || { 'methods': {} };
+  }
+
+  renderMethodForm = (methodDefinition) => {
+    let name = methodDefinition.name || 'unknown method';
+    let inputs = methodDefinition.inputs || [];
+
     let form = document.createElement('form');
-    form.title = method.name + ' form';
-    form.id = 'contract-' + this.name + '-form-' + method.name;
+    form.title = name + ' form';
+    form.id = 'contract-' + this.name + '-form-' + name;
     form.tabIndex = 0;
-    form.dataset.methodName = method.name;
+    // Save method name for later use in submit.
+    form.dataset.methodName = name;
 
     let title = document.createElement('h3');
-    title.innerHTML = method.name;
+    title.innerHTML = name;
     title.tabIndex = 0;
     form.appendChild(title);
 
-    if (method.inputs.length < 1) {
+    if (inputs.length < 1) {
       let text = document.createElement('p');
       text.innerHTML = 'No inputs';
       form.appendChild(text);
     }
 
-    method.inputs.forEach(input => {
+    // @todo Devdoc
+
+    inputs.forEach(input => {
       let label = document.createElement('label');
       label.htmlFor = this.name + '-input-' + input.name;
       label.innerHTML = input.name;
@@ -73,11 +94,15 @@ class Contract {
   }
 
   init = (force = false) => {
+    let { ethereum, web3 } = window;
+    let accounts = ethereum.accounts ?? [];
+    let selectedAddress = ethereum.selectedAddress ?? false;
+
     if (force || !this.instance) {
       // Build a new Web3 contract object, with default account.
       // @see https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html
       this.instance = new window.web3.eth.Contract(this.abi, this.address, {
-        'from': window.ethereum.selectedAddress ?? window.ethereum.accounts[0] ?? null,
+        'from': selectedAddress ?? accounts[0] ?? null,
       });
     }
 
@@ -85,14 +110,21 @@ class Contract {
   }
 
   call = async (method, data) => {
-    return await this.instance[method](data);
+    console.log(method);
+    // return await this.instance.methods[method](data).call();
+  }
+
+  send = async (method, data) => {
+    return await this.instance.methods[method]();
   }
 
   // Events
   onMethodFormSubmit = async (event) => {
+    let { BN } = window.web3.utils;
+
     event.preventDefault();
 
-    this.messenger.clear();
+    Messenger.clear();
 
     let methodForm = event.target;
     let methodName = methodForm.dataset.methodName;
@@ -113,23 +145,19 @@ class Contract {
       let value = pair[1];
       if (value.length < 1) { continue; }
       if (parseInt(pair[1])) {
-        value = ethers.BigNumber.from(pair[1]).toString();
+        value = new BN(pair[1]).toString();
       }
-
-      console.log(value);
-
       overrides[pair[0]] = value;
     };
 
-    await this.instance[methodName](...params, overrides)
-      .finally(() => {
-        let msg = 'Called <code>' + methodName + '</code> with:<br>' +
-          'Args: <pre>' + JSON.stringify(args) + '</pre>' +
-          'Overrides: <pre>' + JSON.stringify(overrides) + '</pre>'
-        this.messenger.new(msg);
-      })
-      .then(result => this.messenger.new('Result:<br>' + result, 0, 2))
-      .catch(error => this.messenger.error('Error ' + error.code + ': ' + error.message));
+    let callData = { ...params, ...overrides };
+    let msg = 'Calling <em>' + this.name + ' <b>' + methodName + '()</b></em>';
+    Messenger.new(msg + '<br>' + JSON.stringify(callData));
+
+
+    this.call(methodName, callData)
+      .then(result => Messenger.new('Result:<br>' + result, 0, 2))
+      .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message));
   };
 
 }
