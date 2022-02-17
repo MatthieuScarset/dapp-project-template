@@ -33,14 +33,15 @@ class Contract {
     return events;
   }
 
-  devdoc = (method) => {
-    let key = method + '(' + JSON.stringify(method.inputs) + ')';
-    return this.definition.devdoc[ley] || { 'methods': {} };
-  }
+  doc = (type = 'devdoc', methodDefinition) => {
+    let name = methodDefinition.name || 'unknown method';
+    let inputs = methodDefinition.inputs || {};
+    let paramTypes = [];
+    Object.entries(inputs).forEach(input => paramTypes.push(input[1].type));
+    let key = name + '(' + paramTypes.join(',') + ')';
 
-  userdoc = (method) => {
-    let key = method + '(' + JSON.stringify(method.inputs) + ')';
-    return this.definition.userdoc[key] || { 'methods': {} };
+    let doc = this.definition[type].methods[key] || {};
+    return doc.details || '';
   }
 
   renderMethodForm = (methodDefinition) => {
@@ -59,23 +60,27 @@ class Contract {
     title.tabIndex = 0;
     form.appendChild(title);
 
-    if (inputs.length < 1) {
-      let text = document.createElement('p');
-      text.innerHTML = 'No inputs';
-      form.appendChild(text);
-    }
-
-    // @todo Devdoc
+    // Documentation.
+    let block = document.createElement('details');
+    let helpTexts = [];
+    ['userdoc', 'devdoc'].forEach(type => {
+      helpTexts.push(this.doc(type, methodDefinition));
+    });
+    let hasHelpTexts = helpTexts.filter(v => { return v.length }).length < 1;
+    block.innerHTML = helpTexts.join('<hr>');
+    block.classList.add('text-xs', (hasHelpTexts ? 'hidden' : 'visible'));
+    form.appendChild(block);
 
     inputs.forEach(input => {
+      let uniqueId = this.name + '-method-' + name + '-input-' + input.name;
       let label = document.createElement('label');
-      label.htmlFor = this.name + '-input-' + input.name;
+      label.htmlFor = uniqueId;
       label.innerHTML = input.name;
       label.tabIndex = 0;
       form.appendChild(label);
 
       let element = document.createElement('input');
-      element.id = this.name + '-input-' + input.name;
+      element.id = uniqueId;
       element.name = input.name;
       element.placeholder = input.type;
       form.appendChild(element);
