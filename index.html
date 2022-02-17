@@ -20,7 +20,7 @@
       <h1 class="contract-name" tabindex="0">Dapp project template</h1>
     </a>
 
-    <nav class="flex space-x-10 px-2" role="main">
+    <nav class="flex items-center space-x-10 px-2" role="main">
       <button id="connect" class="w-24 text-ellipsis overflow-hidden cursor-pointer hover:text-teal-600">
         <span class="label">Connect</span>
         <span class="address"></span>
@@ -33,7 +33,7 @@
     </section>
 
     <section id="overrides">
-      <details class="border-2 p-4">
+      <details class="p-4 border-2">
         <summary class="font-bold text-2xl cursor-pointer">Transaction overrides</summary>
         <p class="text-xs">Use this to add parameters to your calls.</p>
         <form id="tx-overrides-form" class="flex flex-wrap items-center mt-2 mb-2 p-2 border-2 bg-gray-200">
@@ -52,12 +52,13 @@
         </form>
       </details>
     </section>
+
     <section id="contracts">
     </section>
   </main>
 
   <!-- Section required by `modules/messages.js` -->
-  <section id="messages" class="absolute bottom-6 right-6 h-fit max-w-sm m-auto">
+  <section id="messages" class="sticky m-auto mr-6 bottom-6 h-fit max-w-sm">
     <button id="messagesClear" class="block w-full text-right cursor-pointer hover:text-teal-600">
       Clear messages
     </button>

@@ -3,5 +3,13 @@ module.exports = {
     './build/*.html',
     './scripts/*.{js,jsx,ts,tsx,vue}',
   ],
-  plugins: []
+  plugins: [],
+  theme: {
+    extend: {
+      maxWidth: {
+        '1/2': '50%',
+        '1/3': '33.33333%',
+      }
+    }
+  }
 };

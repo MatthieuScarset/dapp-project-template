@@ -1,7 +1,5 @@
 import { Messenger } from "./messenger.js";
 
-const { ethereum } = window;
-
 class Wallet {
   constructor() {
     this.account = false;
@@ -11,20 +9,11 @@ class Wallet {
     this.btn.addEventListener('click', this.connect, true);
 
     // Register events.
-    ethereum.on('accountsChanged', this.accountsChanged, true);
-    ethereum.on('chainChanged', this.networkChanged, true);
+    window.ethereum.on('accountsChanged', this.accountsChanged, true);
+    window.ethereum.on('chainChanged', this.networkChanged, true);
 
     // Open wallet.
     this.connect();
-  }
-
-  refresh = () => {
-    try {
-      // Refresh Web3 object.
-      window.web3 = new Web3(window.ethereum);
-    } catch (e) {
-      Messenger.error(e);
-    }
   }
 
   copy = () => {
@@ -36,7 +25,7 @@ class Wallet {
   }
 
   connect = async () => {
-    await ethereum.request({ method: 'eth_requestAccounts' })
+    await window.ethereum.request({ method: 'eth_requestAccounts' })
       .then(accounts => {
         let account = accounts[0];
 
@@ -62,9 +51,8 @@ class Wallet {
       .catch(e => {
         switch (e.code) {
           case 4001:  // Wallet closed.
-          case 32002: // Another request exists.
-            Messenger.error(e.code + ': ' + e.message, true);
-            break;
+          case -32002: // Another request exists.
+            Messenger.error("¯\\_(ツ)_/¯" + '<br>' + 'Can you open your wallet please?', true);
           default:
             // Fail silently.
             console.log(e.code, e.message);
