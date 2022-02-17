@@ -45,6 +45,10 @@ async function main(callback) {
         summary.innerHTML = name;
         summary.classList.add('font-bold', 'text-2xl', 'cursor-pointer');
 
+        let description = document.createElement('p');
+        description.innerHTML = 'View <a class="underline" href="/contracts/' + name + '.json" target="_blank">full contract\'s details</a>.';
+        description.classList.add('text-xs');
+
         let list = document.createElement('div');
         list.classList.add('flex', 'flex-wrap', 'items-stretch');
 
@@ -57,7 +61,7 @@ async function main(callback) {
           let submits = form.querySelectorAll('input[type="submit"]');
 
           // Custom theming.
-          form.classList.add('flex-1', 'basis-1/2', 'p-4', 'bg-gray-200');
+          form.classList.add('flex-1', 'basis-1/2', 'p-6', 'fake-bg');
           form.classList.add('md:max-w-1/2');
           titles.forEach(el => el.classList.add('font-bold'));
           labels.forEach(el => el.classList.add('block', 'w-full', 'cursor-pointer'));
@@ -68,6 +72,7 @@ async function main(callback) {
         });
 
         details.appendChild(summary);
+        details.appendChild(description);
         details.appendChild(list);
         contractsWrapper.appendChild(details);
       });

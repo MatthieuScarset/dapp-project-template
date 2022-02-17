@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.fake-bg {
+  position: relative;
+}
+.fake-bg::after {
+  content: ' ';
+  background-color: rgb(229 231 235);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  margin: auto;
+  width: calc(100% - 1rem);
+  height: calc(100% - 1rem);
+}
