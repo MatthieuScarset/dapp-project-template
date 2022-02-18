@@ -42,8 +42,12 @@ class Messenger {
     wrapper.appendChild(item);
   }
 
-  static clear = () => {
+  static clearAll = () => {
     document.querySelectorAll('.message').forEach((el) => { el.remove() });
+  }
+
+  clear = () => {
+    Messenger.clearAll();
   }
 
   constructor() {

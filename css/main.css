@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.button {
+  @apply text-ellipsis overflow-hidden cursor-pointer hover:text-teal-600;
+}
+
 .message > div {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .fake-bg {

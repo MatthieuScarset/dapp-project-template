@@ -122,9 +122,12 @@ class Contract {
       // Build a new Web3 contract object, with default account.
       // @see https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html
       this.instance = new window.web3.eth.Contract(this.abi, this.address, {
-        'from': selectedAddress ?? accounts[0] ?? null,
+        from: selectedAddress ?? accounts[0] ?? null
       });
     }
+
+    window.deployedContracts = window.deployedContracts || [];
+    window.deployedContracts.push(this.instance);
 
     return this.instance;
   }
@@ -135,7 +138,7 @@ class Contract {
 
     event.preventDefault();
 
-    Messenger.clear();
+    Messenger.clearAll();
 
     let methodForm = event.target;
     let methodName = methodForm.dataset.methodName;
@@ -177,16 +180,19 @@ class Contract {
 
       switch (action) {
         case 'encodeABI':
-          Messenger.new('Signature hash:<br><code>' + fn.encodeABI() + '</code>', 0);
+          Messenger.new('Signature hash:<br><code>' + fn.encodeABI() + '</code>', 0, 2);
           break;
         case 'estimateGas':
           fn.estimateGas(overrides)
-            .then(gasAmount => Messenger.new('Gas amount estimated:<br>' + gasAmount, 0))
+            .then(gasAmount => Messenger.new('Gas amount estimated:<br>' + gasAmount, 0, 2))
             .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message, 0));
           break;
         case 'call':
-          fn.call(overrides)
-            .then(result => Messenger.new('Result:<br>' + result, 0, 2))
+          fn.call()
+            .then(result => {
+              let message = typeof (result) == 'object' ? JSON.stringify(result) : result;
+              Messenger.new('Result:<br>' + message, 0, 2)
+            })
             .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message, 0));
           break;
         case 'send':

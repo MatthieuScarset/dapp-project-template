@@ -22,13 +22,13 @@
     "@openzeppelin/contracts": "^4.5.0"
   },
   "scripts": {
-    "start": "(yarn server > /dev/null) & yarn back:migrate && yarn watch",
+    "start": "rm -rf build/ && (yarn server > /dev/null) & yarn back:migrate && yarn build && yarn watch",
     "stop": "pkill node && pkill webpack",
     "watch": "yarn front:watch",
     "build": "yarn back:build && yarn front:build",
     "server": "yarn back:server & yarn front:server",
     "back:server": "ganache -p 7545",
-    "back:migrate": "truffle migrate --reset",
+    "back:migrate": "truffle migrate --reset > migrate.log",
     "back:build": "truffle compile",
     "back:test": "truffle test",
     "front:server": "npx webpack serve",

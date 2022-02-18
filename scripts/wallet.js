@@ -16,6 +16,13 @@ class Wallet {
     this.connect();
   }
 
+  getNetwork = async () => {
+    let network = {};
+    network.id = await window.web3.eth.net.getId().then(id => id);
+    network.name = await window.web3.eth.net.getNetworkType().then(name => name);
+    return network;
+  }
+
   copy = () => {
     let address = this.address.innerHTML;
     if (address && address.length) {

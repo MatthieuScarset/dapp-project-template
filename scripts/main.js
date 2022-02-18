@@ -6,7 +6,10 @@ import { Wallet } from './wallet';
 const Web3 = require('../lib/web3.min.js');
 
 // Add/Remove your contracts' name here.
-const contracts = ['MyFriends', 'MyNFT'];
+const contracts = ['HelloWorld'];
+
+// Network information.
+const network = {};
 
 // Start application.
 async function main(callback) {
@@ -23,10 +26,23 @@ async function main(callback) {
   }
 
   // Refresh Web3 object for easier use within other components.
-  window.web3 = new Web3(Web3.givenProvider || window.ethereum || "ws://localhost:7545");
+  window.web3 = new Web3(Web3.givenProvider || window.ethereum || "ws://localhost:8545");
 
   // Connect user.
-  new Wallet();
+  let wallet = new Wallet();
+
+  // Check selected network.
+  await wallet.getNetwork().then(network => {
+    if (network.id == '1337') {
+      Messenger.new('Network:<br><code>' + network.name + ' (id:' + network.id + ')</code>');
+    } else {
+      Messenger.error(
+        'Network:<br><code>' + network.name + ' (id:' + network.id + ')</code>' + '<br>' +
+        'Please switch to the <a href="https://docs.metamask.io/guide/getting-started.html#running-a-test-network" target="_blank" class="underline">local ganache server</a>.',
+        1
+      );
+    }
+  });
 
   // Build contracts info.
   contracts.forEach(async (name) => {
@@ -36,6 +52,8 @@ async function main(callback) {
       // Render forms to play with our contract from frontend.
       .then(contract => renderContractForm(contract));
   });
+
+  Messenger.new('Play with your contract(s) in the console with:<br><code>window.deployedContracts</code>', 1);
 }
 
 // Helper function to customize UX.
@@ -75,14 +93,23 @@ function renderContractForm(contract = {}) {
 
   let summary = document.createElement('summary');
   summary.innerHTML = contract.name;
-  summary.classList.add('font-bold', 'text-2xl', 'cursor-pointer');
+  summary.classList.add('font-bold', 'text-2xl');
 
-  let description = document.createElement('p');
-  description.innerHTML = 'View <a class="underline" href="/contracts/' + contract.name + '.json" target="_blank">full contract\'s details</a>.';
-  description.classList.add('text-xs');
+  let buttons = document.createElement('nav');
+  buttons.classList.add('flex', 'items-center', 'space-between', 'text-sm', 'cursor-pointer');
+
+  let btnOpen = document.createElement('button');
+  btnOpen.id = 'openJson';
+  btnOpen.innerHTML = 'Full details';
+  btnOpen.classList.add('flex-1', 'contract-button');
+  btnOpen.addEventListener('click', () => window.open('/contracts/' + contract.name + '.json'), true);
+  buttons.append(btnOpen);
+
+  // '<button id="copyABI" class="button">Copy ABI</button>' +
+  // '<button id="copyAddress" class="button">Copy Address</button>' +
 
   details.appendChild(summary);
-  details.appendChild(description);
+  details.appendChild(buttons);
   details.appendChild(list);
 
   document.querySelector('#contracts').appendChild(details);
