@@ -27,7 +27,7 @@
     "watch": "yarn front:watch",
     "build": "yarn back:build && yarn front:build",
     "server": "yarn back:server & yarn front:server",
-    "back:server": "ganache -p 7545",
+    "back:server": "ganache -p 8545",
     "back:migrate": "truffle migrate --reset > migrate.log",
     "back:build": "truffle compile",
     "back:test": "truffle test",
