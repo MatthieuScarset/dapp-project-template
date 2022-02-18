@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.message > div {
+  overflow-x: scroll;
+}
+
 .fake-bg {
   position: relative;
 }

@@ -5,8 +5,11 @@ class Contract {
     this.definition = definition;
     this.name = definition.contractName;
     this.abi = definition.abi;
-    this.address = Object.keys(definition.networks).pop().address;
-    this.instance = undefined;
+
+    let lastEvent = Object.keys(definition.networks).pop();
+    this.address = definition.networks[lastEvent].address;
+
+    this.instance = this.init();
   }
 
   static fetch = async (name) => {
@@ -86,11 +89,23 @@ class Contract {
       form.appendChild(element);
     });
 
-    let submit = document.createElement('input');
-    submit.type = 'submit';
-    submit.value = 'Submit';
-    submit.id = this.name + '-submit';
-    form.appendChild(submit);
+    let buttons = { 'send': 'send', 'call': 'call', 'gas': 'estimateGas', 'encode': 'encodeABI' };
+    if (methodDefinition.stateMutability === 'view') {
+      delete buttons.send;
+    }
+
+    let actions = document.createElement('div');
+    actions.classList.add('flex', 'items-center', 'space-between');
+    Object.entries(buttons).forEach(pair => {
+      let submit = document.createElement('input');
+      submit.type = 'submit';
+      submit.value = pair[0];
+      submit.id = this.name + '-' + name;
+      submit.dataset.action = pair[1];
+
+      actions.appendChild(submit);
+    });
+    form.appendChild(actions);
 
     // Take over submit.
     form.addEventListener("submit", this.onMethodFormSubmit);
@@ -114,15 +129,6 @@ class Contract {
     return this.instance;
   }
 
-  call = async (method, data) => {
-    console.log(method);
-    // return await this.instance.methods[method](data).call();
-  }
-
-  send = async (method, data) => {
-    return await this.instance.methods[method]();
-  }
-
   // Events
   onMethodFormSubmit = async (event) => {
     let { BN } = window.web3.utils;
@@ -137,12 +143,13 @@ class Contract {
 
     let args = {};
     let params = [];
+    // Get call parameters.
     for (var pair of formData.entries()) {
       args[pair[0]] = pair[1];
       params.push(pair[1]);
     }
 
-    // Allow custom TX overrides.
+    // Get custom transaction overrides, if set.
     let txParamsForm = document.getElementById('tx-overrides-form');
     let txParamsData = new FormData(txParamsForm);
     let overrides = {}
@@ -155,16 +162,50 @@ class Contract {
       overrides[pair[0]] = value;
     };
 
-    let callData = { ...params, ...overrides };
-    let msg = 'Calling <em>' + this.name + ' <b>' + methodName + '()</b></em>';
-    Messenger.new(msg + '<br>' + JSON.stringify(callData));
+    try {
+      // Prepare call with parameters.
+      let fn = this.instance.methods[methodName](...params);
+      let action = event.submitter.dataset.action || null;
 
+      // Display call details.
+      let callData = { ...params, ...overrides };
+      let msg = 'Call <em><b>' + this.name + '.' + methodName + '().' + action + '()</b></em > ';
+      if (Object.keys(callData).length) {
+        msg += ' with params:' + '<br>' + '<code>' + JSON.stringify(callData) + '</code>';
+      }
+      Messenger.new(msg);
 
-    this.call(methodName, callData)
-      .then(result => Messenger.new('Result:<br>' + result, 0, 2))
-      .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message));
-  };
+      switch (action) {
+        case 'encodeABI':
+          Messenger.new('Signature hash:<br><code>' + fn.encodeABI() + '</code>', 0);
+          break;
+        case 'estimateGas':
+          fn.estimateGas(overrides)
+            .then(gasAmount => Messenger.new('Gas amount estimated:<br>' + gasAmount, 0))
+            .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message, 0));
+          break;
+        case 'call':
+          fn.call(overrides)
+            .then(result => Messenger.new('Result:<br>' + result, 0, 2))
+            .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message, 0));
+          break;
+        case 'send':
+          fn.send(overrides)
+            .on('transactionHash', hash => Messenger.new('TX hash:<br>' + hash, 0, 2))
+            .on('receipt', receipt => Messenger.new('TX receipt:<br>' + JSON.stringify(receipt), 0, 2))
+            .on('confirmation', (confirmationNumber, receipt) => Messenger.new('TX confirmation:<br>' + confirmationNumber + '<br>' + JSON.stringify(receipt), 0, 2))
+            .on('error', (error, receipt) => Messenger.error('Error ' + error.code + ': ' + error.message + '<br>' + JSON.stringify(receipt), 0));
+          break;
+        default:
+          console.log('Unknown action: ' + action);
+          break;
+      }
 
+    } catch (error) {
+      Messenger.error('Error ' + error.code + ': ' + error.message, 0);
+    }
+
+  }
 }
 
 export { Contract };
