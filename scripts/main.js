@@ -58,8 +58,51 @@ async function main(callback) {
 
 // Helper function to customize UX.
 function renderContractForm(contract = {}) {
-  let list = document.createElement('div');
-  list.classList.add('flex', 'flex-wrap', 'items-stretch');
+  // Custom elements for our frontend.
+  let wrapper = document.createElement('div');
+  wrapper.id = 'contract-' + contract.name;
+  wrapper.classList.add('p-4', 'border-2');
+
+  // Title
+  let title = document.createElement('h2');
+  title.innerHTML = contract.name;
+  title.classList.add('mb-2', 'text-2xl', 'font-bold');
+
+  let buttons = document.createElement('nav');
+  buttons.classList.add('flex', 'items-center', 'space-between', 'text-sm', 'cursor-pointer', 'bg-gray-200');
+
+  // Copy contract address.
+  let btnAbi = document.createElement('button');
+  btnAbi.id = contract.name + '-copyAbi';
+  btnAbi.innerHTML = 'Copy ABI';
+  btnAbi.classList.add('flex-1', 'p-6', 'button');
+  btnAbi.addEventListener('click', () => {
+    navigator.clipboard.writeText(JSON.stringify(contract.abi));
+    Messenger.new('Contract\'s ABI copied!', true);
+  });
+  buttons.append(btnAbi);
+
+  // Copy ABI.
+  let btnAddress = document.createElement('button');
+  btnAddress.id = contract.name + '-copyAddress';
+  btnAddress.innerHTML = 'Copy address';
+  btnAddress.classList.add('flex-1', 'p-6', 'button');
+  btnAddress.addEventListener('click', () => {
+    navigator.clipboard.writeText(contract.address);
+    Messenger.new('Address copied!', true);
+  });
+  buttons.append(btnAddress);
+
+  // Open artifact.
+  let btnOpen = document.createElement('button');
+  btnOpen.id = contract.name + '-openJson';
+  btnOpen.innerHTML = 'Full details';
+  btnOpen.classList.add('flex-1', 'p-6', 'button');
+  btnOpen.addEventListener('click', () => window.open('/contracts/' + contract.name + '.json'), true);
+  buttons.append(btnOpen);
+
+  let methodsList = document.createElement('div');
+  methodsList.classList.add('flex', 'flex-wrap', 'items-stretch');
 
   let methods = contract.methods();
   for (const [methodName, methodDefinition] of Object.entries(methods)) {
@@ -81,38 +124,27 @@ function renderContractForm(contract = {}) {
     inputs.forEach(el => el.classList.add('block', 'w-full', 'border-2', 'p-1'));
     submits.forEach(el => el.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md', 'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600'));
 
-    list.appendChild(form);
+    methodsList.appendChild(form);
   };
 
   // Custom elements for our frontend.
   let details = document.createElement('details');
-  details.id = 'contract-' + contract.name;
-  details.title = 'Toggle "' + contract.name + '.sol" contract\'s method forms';
   details.open = true;
   details.classList.add('p-4', 'border-2');
 
   let summary = document.createElement('summary');
-  summary.innerHTML = contract.name;
-  summary.classList.add('font-bold', 'text-2xl');
-
-  let buttons = document.createElement('nav');
-  buttons.classList.add('flex', 'items-center', 'space-between', 'text-sm', 'cursor-pointer');
-
-  let btnOpen = document.createElement('button');
-  btnOpen.id = 'openJson';
-  btnOpen.innerHTML = 'Full details';
-  btnOpen.classList.add('flex-1', 'contract-button');
-  btnOpen.addEventListener('click', () => window.open('/contracts/' + contract.name + '.json'), true);
-  buttons.append(btnOpen);
-
-  // '<button id="copyABI" class="button">Copy ABI</button>' +
-  // '<button id="copyAddress" class="button">Copy Address</button>' +
+  summary.innerHTML = 'Methods';
+  summary.title = 'Toggle "' + contract.name + '.sol" contract\'s method forms';
+  summary.classList.add('font-bold');
 
   details.appendChild(summary);
-  details.appendChild(buttons);
-  details.appendChild(list);
+  details.appendChild(methodsList);
 
-  document.querySelector('#contracts').appendChild(details);
+  wrapper.appendChild(title);
+  wrapper.appendChild(details);
+  wrapper.appendChild(buttons);
+
+  document.querySelector('#contracts').appendChild(wrapper);
 }
 
 window.addEventListener('load', main, true);
